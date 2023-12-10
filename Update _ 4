@@ -1,0 +1,17 @@
+@PutMapping("/books/{id}")
+public ResponseEntity<Book> updateBook(@PathVariable(value = "id") Long bookId,
+                                       @Valid @RequestBody Book bookDetails) {
+    Optional<Book> book = bookRepository.findById(bookId);
+    if (!book.isPresent()) return ResponseEntity.notFound().build();
+
+    book.get().setTitle(bookDetails.getTitle());
+    book.get().setAuthor(bookDetails.getAuthor());
+    book.get().setPublisher(bookDetails.getPublisher());
+    book.get().setIsbn(bookDetails.getIsbn());
+    book.get().setYearOfPublication(bookDetails.getYearOfPublication());
+    book.get().setAvailableCopies(bookDetails.getAvailableCopies());
+    book.get().setTotalCopies(bookDetails.getTotalCopies());
+
+    Book updatedBook = bookRepository.save(book.get());
+    return ResponseEntity.ok(updatedBook);
+}
